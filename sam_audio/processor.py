@@ -199,9 +199,32 @@ class Processor:
         videos: List[str | torch.Tensor],
         masks: List[str | torch.Tensor],
     ) -> list[torch.Tensor]:
-        video = [VideoDecoder(v)[:] if isinstance(v, str) else v for v in videos]
-        video_mask = [VideoDecoder(v)[:] if isinstance(v, str) else v for v in masks]
-        return [v * m.eq(0) for v, m in zip(video, video_mask, strict=False)]
+        video = [VideoDecoder(v, dimension_order="NCHW")[:] if isinstance(v, str) else v for v in videos]
+        video_mask = [VideoDecoder(v, dimension_order="NCHW")[:] if isinstance(v, str) else v for v in masks]
+        
+        results = []
+        for v, m in zip(video, video_mask, strict=False):
+            # ComfyUI image format: (F, H, W, 3) 
+            # SAM-Audio expects: (F, 3, H, W)
+            if v.ndim == 4 and v.size(-1) == 3:
+                v = v.permute(0, 3, 1, 2)
+            
+            # ComfyUI mask format: (F, H, W)
+            # Add channel dimension for broadcasting: (F, 1, H, W)
+            if m.ndim == 3:
+                m = m.unsqueeze(1)
+            elif m.ndim == 4 and m.size(-1) == 1:
+                m = m.permute(0, 3, 1, 2)
+
+            # Ensure same device and type
+            m = m.to(v.device).to(v.dtype)
+            
+            # Masking logic: 
+            # In ComfyUI, 1.0 (white) is usually the selected object.
+            # SAM-Audio needs the masked object to be visible against a black background.
+            results.append(v * m)
+            
+        return results
 
 
 class SAMAudioProcessor(Processor):

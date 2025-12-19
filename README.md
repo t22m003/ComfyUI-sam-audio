@@ -91,6 +91,7 @@ Sample workflow files are included in the `examples/` directory:
 
 - **[text_separation_workflow.json](examples/text_separation_workflow.json)** - Separate audio using text description
 - **[span_separation_workflow.json](examples/span_separation_workflow.json)** - Separate audio by specifying time range
+- **[visual_separation_workflow.json](examples/visual_separation_workflow.json)** - Separate audio associated with visual objects (uses `CLIPSeg` from ComfyUI-Essentials and `Video Combine` from VideoHelperSuite)
 
 To use: Load the workflow JSON file in ComfyUI (drag & drop or File → Load).
 
