@@ -1,0 +1,21 @@
+[project]
+name = "comfyui-sam-audio"
+description = "SAM-Audio (Segment Anything Model for Audio) node for ComfyUI - Separate any sound using text, visual, or span prompts"
+version = "1.0.0"
+license = { file = "LICENSE" }
+authors = [{ name = "t22m003" }]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Environment :: GPU :: NVIDIA CUDA",
+]
+
+[project.urls]
+Repository = "https://github.com/t22m003/ComfyUI-sam-audio"
+Documentation = "https://github.com/t22m003/ComfyUI-sam-audio#readme"
+"Bug Tracker" = "https://github.com/t22m003/ComfyUI-sam-audio/issues"
+
+[tool.comfy]
+PublisherId = "snaka"
+DisplayName = "SAM-Audio"
+Icon = ""
+includes = []
